@@ -1,5 +1,3 @@
-
-
 #
 # This is free software, lisence use MIT.
 # 
@@ -95,8 +93,8 @@ jobs:
           # 
           # 填写日期和标题:
           cat >> .config <<EOF
-          CONFIG_KERNEL_BUILD_USER="Tom on 2020.03.01"
-          CONFIG_GRUB_TITLE="Lean OpenWrt AutoBuild by Tom on 2020.03.01"
+          CONFIG_KERNEL_BUILD_USER="Tom on 2020.03.02"
+          CONFIG_GRUB_TITLE="Lean OpenWrt AutoBuild by Tom on 2020.03.02"
           EOF
           # 编译x64固件:
           cat >> .config <<EOF
@@ -216,7 +214,7 @@ jobs:
           CONFIG_GRUB_BAUDRATE=115200
           CONFIG_GRUB_BOOTOPTS=""
           CONFIG_GRUB_TIMEOUT="0"
-          CONFIG_GRUB_TITLE="OpenWrt"       
+          # CONFIG_GRUB_TITLE="OpenWrt"       
           EOF
           # Compression
           cat >> .config <<EOF
