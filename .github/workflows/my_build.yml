@@ -93,7 +93,8 @@ jobs:
           # 
           # 填写日期和标题:
           cat >> .config <<EOF
-          CONFIG_KERNEL_BUILD_USER="Tom on $(date)"
+          CONFIG_KERNEL_BUILD_DOMAIN="Tom on $(date)"
+          #CONFIG_KERNEL_BUILD_USER="Tom on $(date)"
           CONFIG_GRUB_TITLE="Lean OpenWrt AutoBuild by Tom on $(date)"
           EOF
           # 编译x64固件:
