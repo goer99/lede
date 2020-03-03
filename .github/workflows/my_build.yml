@@ -13,8 +13,8 @@ on:
   push:
     branches: 
       - master
-  #schedule:
-  #  - cron: 0 20 * * *
+  schedule:
+    - cron: 0 20 * * *
   # release:
   #   types: [published]
 
@@ -93,8 +93,8 @@ jobs:
           # 
           # 填写日期和标题:
           cat >> .config <<EOF
-          CONFIG_KERNEL_BUILD_USER="Tom on 2020.03.02"
-          CONFIG_GRUB_TITLE="Lean OpenWrt AutoBuild by Tom on 2020.03.02"
+          CONFIG_KERNEL_BUILD_USER="Tom on $(date)"
+          CONFIG_GRUB_TITLE="Lean OpenWrt AutoBuild by Tom on $(date)"
           EOF
           # 编译x64固件:
           cat >> .config <<EOF
