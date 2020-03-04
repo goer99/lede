@@ -1,4 +1,5 @@
 *.yml
+.github/
 *.o
 .DS_Store
 .*.swp
