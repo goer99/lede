@@ -40,7 +40,7 @@ jobs:
       working-directory: ./
       run: |
         touch .gitignore
-        echo "*.yml" >> .gitignore
+        echo ".github/" >> .gitignore
 
     #- name: Push Commits
     #  uses: ad-m/github-push-action@master
