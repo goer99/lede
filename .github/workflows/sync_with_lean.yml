@@ -36,12 +36,6 @@ jobs:
     - name: Load upstream commits
       run: git pull https://github.com/coolsnowwolf/lede.git --no-edit --allow-unrelated-histories --strategy-option ours
 
-    - name: ignore the workflows
-      working-directory: ./
-      run: |
-        touch .gitignore
-        echo ".github/" >> .gitignore
-
     #- name: Push Commits
     #  uses: ad-m/github-push-action@master
     #  with:
