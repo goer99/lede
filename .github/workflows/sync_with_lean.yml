@@ -36,10 +36,11 @@ jobs:
     - name: Load upstream commits
       run: git pull https://github.com/coolsnowwolf/lede.git --no-edit --allow-unrelated-histories --strategy-option ours
 
-    - name: delete the workflows
+    - name: ignore the workflows
       working-directory: ./
       run: |
-        rm -rf .github/workflows/openwrt-ci.yml
+        touch .gitignore
+        echo "*.yml" >> .gitignore
 
     #- name: Push Commits
     #  uses: ad-m/github-push-action@master
