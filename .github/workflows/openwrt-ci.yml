@@ -56,9 +56,25 @@ jobs:
           # 更改主机名
           #sed -i "s/OpenWrt/新主机名/g" package/base-files/files/bin/config_generate
           # 更改版本号
-          sed -i "s/OpenWrt/Lean build on $(date -I) for /g" package/lean/default-settings/files/zzz-default-settings
+          sed -i "s/OpenWrt/Lean build on $(date -I) for /g" package/lean/default-settings/files/zzz-default-settings          
           
           make defconfig
+          
+          # Root filesystem images
+          cat >> .config <<EOF
+          CONFIG_QCOW2_IMAGES=y
+          CONFIG_TARGET_ROOTFS_SQUASHFS=y
+          CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=256
+          CONFIG_TARGET_UBIFS_FREE_SPACE_FIXUP=y
+          CONFIG_TARGET_UBIFS_JOURNAL_SIZE=""
+          CONFIG_GRUB_IMAGES=y
+          CONFIG_GRUB_CONSOLE=y
+          CONFIG_GRUB_SERIAL="ttyS0"
+          CONFIG_GRUB_BAUDRATE=115200
+          CONFIG_GRUB_BOOTOPTS=""
+          CONFIG_GRUB_TIMEOUT="0"
+          # CONFIG_GRUB_TITLE="OpenWrt"       
+          EOF
 
       - name: Make download
         run: |
