@@ -10,56 +10,42 @@
 name: OpenWrt-CI-extra-build
 
 on:
-  #push:
-  #  branches: 
-  #    - master
-  watch:
-    types: [started]
-  
   schedule:
     - cron: 0 20 * * 5
-  # release:
-  #   types: [published]
-
+  push:
+    tags:
+      - '*'
+  watch:
+    types: [started]
+    
 jobs:
-  build:
-    runs-on: ubuntu-latest
+
+  build_openwrt:
+
+    name: Build OpenWrt and release
+    runs-on: ubuntu-18.04
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         with:
           ref: master
 
-      - name: Initialization environment
+      - name: Space cleanup
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           docker rmi `docker images -q`
-          echo "Deleting files, please wait ..."
-          sudo rm -rf \
-            /usr/share/dotnet \
-            /etc/mysql \
-            /etc/php
-          sudo -E apt-get -y purge \
-            azure-cli \
-            ghc* \
-            zulu* \
-            hhvm \
-            llvm* \
-            firefox \
-            google* \
-            dotnet* \
-            powershell \
-            openjdk* \
-            mysql* \
-            php*
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
           sudo -E apt-get update
-          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler
+          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
+          df -h
       - name: Update feeds
         run: |
+          sed -i 's/\"#src-git\"/\"src-git\"/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       - name: Costom configure file
@@ -202,8 +188,7 @@ jobs:
           # CONFIG_VMDK_IMAGES is not set
           EOF
           
-          ## Below are extra packages and features...
-          
+          ## Below are extra packages and features...          
           
           # Root filesystem images
           cat >> .config <<EOF
@@ -255,12 +240,11 @@ jobs:
           sed -i "s/OpenWrt/Tom build on $(date -I) for /g" package/lean/default-settings/files/zzz-default-settings
           
           make defconfig
-          
+
       - name: Make download
         run: |
           make download -j8
           find dl -size -1024c -exec rm -f {} \;
-          
       - name: Compile firmware
         run: |
           make -j$(nproc) || make -j1 V=s
@@ -275,9 +259,31 @@ jobs:
           
       #- name: Prepare artifact
       #  run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-        
+
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt firmware
+          name: OpenWrt_firmware
           path: ./bin/targets/
+
+      - name: Create release
+        if: github.event == 'push'
+        id: create_release
+        uses: actions/create-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false      
+
+      - name: Upload release asset
+        if: github.event == 'push'
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/targets/*/*/
