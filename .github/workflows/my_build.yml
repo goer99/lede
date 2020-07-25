@@ -266,7 +266,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt_firmware_Tom_${{ env.FILE_DATE }}
+          name: OpenWrt_firmware_extra_${{ env.FILE_DATE }}
           path: ./bin/targets/
 
       - name: Create release
