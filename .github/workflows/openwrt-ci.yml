@@ -12,9 +12,9 @@ name: OpenWrt-CI
 on:
   schedule:
     - cron: 0 20 * * 1
-  push:
-    tags:
-      - '*'
+  #push:
+  #  tags:
+  #    - '*'
   watch:
     types: [started]
     
@@ -100,13 +100,16 @@ jobs:
           du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
+          
+          echo "::set-env name=FILE_DATE::_$(date +"%Y%m%d%H%M")"
+          
       - name: Prepare artifact
         run: find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
 
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: OpenWrt_firmware
+          name: OpenWrt_firmware_lean_${{ env.FILE_DATE }}
           path: ./bin/targets/
 
       - name: Create release
