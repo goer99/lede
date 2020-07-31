@@ -49,6 +49,7 @@ jobs:
           echo "src-git helloworld https://github.com/fw876/helloworld" >> ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          ./scripts/feeds install -a
       - name: Generate configuration file
         run: | 
           # 更改默认ip
@@ -57,8 +58,6 @@ jobs:
           #sed -i "s/OpenWrt/新主机名/g" package/base-files/files/bin/config_generate
           # 更改版本号
           sed -i "s/OpenWrt/Lean build on $(date -I) for /g" package/lean/default-settings/files/zzz-default-settings          
-          
-          make defconfig
           
           # Root filesystem images
           cat >> .config <<EOF
@@ -84,6 +83,8 @@ jobs:
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Server=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Socks=y
           EOF
+          
+          make defconfig
 
       - name: Make download
         run: |
