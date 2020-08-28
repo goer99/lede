@@ -12,11 +12,14 @@ name: OpenWrt-CI-extra-build
 on:
   schedule:
     - cron: 0 1 8 * *
-  push:
-    tags:
-      - '*'
-  watch:
-    types: [started]
+  
+  workflow_dispatch:
+  
+  #push:
+  #  tags:
+  #    - '*'
+  #watch:
+  #  types: [started]
     
 jobs:
 
