@@ -10,10 +10,11 @@ name: OpenWrt-CI
 on:
   schedule:
     - cron: 0 20 1 * *
+  workflow_dispatch:
   #release:
   #  types: [published]
-  watch:
-    types: [started]
+  #watch:
+  #  types: [started]
 
 jobs:
 
