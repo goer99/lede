@@ -102,7 +102,7 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
           
-          echo "::set-env name=FILE_DATE::_$(date +"%Y%m%d%H%M")"
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
           
       - name: Prepare artifact
         run: |
