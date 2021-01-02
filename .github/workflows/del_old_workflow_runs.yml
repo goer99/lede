@@ -12,7 +12,7 @@ on:
       minimum_runs:
         description: 'The minimum runs to keep for each workflow.'
         required: true
-        default: 12
+        default: 3
 
 jobs:
   del_runs:
