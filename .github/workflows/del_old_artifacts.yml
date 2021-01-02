@@ -1,7 +1,7 @@
 name: 'Delete old artifacts'
 on:
-  schedule:
-    - cron: '0 0 1 * *' # every month
+  #schedule:
+  #  - cron: '0 0 1 * *' # every month
   workflow_dispatch:  
 
 jobs:
