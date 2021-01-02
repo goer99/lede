@@ -1,0 +1,15 @@
+name: 'Delete old artifacts'
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day
+  workflow_dispatch:  
+
+jobs:
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          expire-in: 90days # Setting this to 0 will delete all artifacts
